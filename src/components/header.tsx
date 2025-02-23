@@ -1,16 +1,14 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { Heart, Search, ShoppingCart, User } from 'lucide-react';
+import { Heart, MapPinned, Search, ShoppingCart, User } from 'lucide-react';
 import { createClient } from '@/utils/supabase/server';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import toast from 'react-hot-toast';
 import SignoutButton from './signout-button';
 
 export default async function Header() {
@@ -24,14 +22,17 @@ export default async function Header() {
     <header className="border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <nav className="flex items-center space-x-6">
-          <Link href="#" className="text-sm font-medium">
+          <Button className="rounded-lg" variant="ghost" size="icon">
+            <MapPinned className="h-5 w-5" />
+          </Button>
+          <Link href="/" className="text-sm font-medium">
             Inicio
           </Link>
           <Link href="#" className="text-sm font-medium">
-            Productos
+            Comprar
           </Link>
-          <Link href="#" className="text-sm font-medium">
-            Soporte
+          <Link href="/sell" className="text-sm font-medium">
+            Vender
           </Link>
         </nav>
         <Link href="/" className="text-xl font-bold">
