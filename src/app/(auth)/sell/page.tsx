@@ -1,8 +1,17 @@
 import { createClient } from '@/utils/supabase/server';
 import SellForm from './components/sell-form';
+import RestrictedPage from '@/components/restricted-page';
 
 export default async function Page() {
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return <RestrictedPage />;
+  }
 
   const { data: departments } = await supabase
     .from('departments')
@@ -11,7 +20,7 @@ export default async function Page() {
   const { data: municipalities } = await supabase
     .from('municipalities')
     .select('id, name, department_id');
-  
+
   const { data: categories } = await supabase
     .from('categories')
     .select('id, name');
