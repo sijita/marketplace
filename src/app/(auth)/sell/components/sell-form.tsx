@@ -17,6 +17,7 @@ import { Plus, X } from 'lucide-react';
 import { sellAction } from '@/app/(auth)/sell/actions/sell';
 import useSellFunctions from '@/app/(auth)/sell/hooks/use-sell-functions';
 import useSubmitAction from '@/hooks/use-submit-action';
+import SubmitButton from '@/components/submit-button';
 
 export default function SellForm({
   departments,
@@ -236,9 +237,7 @@ export default function SellForm({
           </div>
         </div>
       </div>
-      <Button className="w-full" type="submit">
-        Publicar
-      </Button>
+      <SubmitButton />
     </form>
   );
 }

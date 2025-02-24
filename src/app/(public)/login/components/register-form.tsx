@@ -1,56 +1,37 @@
 'use client';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { redirect } from 'next/navigation';
 import { registerAction } from '@/app/(public)/login/actions/register';
-import { useFormStatus } from 'react-dom';
+import useSubmitAction from '@/hooks/use-submit-action';
+import SubmitButton from '@/components/submit-button';
+import useMatchPasswords from '@/app/(public)/login/hooks/use-match-passwords';
 
 export default function RegisterForm() {
-  const { pending } = useFormStatus();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setConfirmPassword(e.target.value);
-    if (password !== e.target.value) {
-      setError('Las contraseñas no coinciden');
-    } else {
-      setError('');
-    }
-  };
+  const {
+    password,
+    confirmPassword,
+    setPassword,
+    setConfirmPassword,
+    error,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+  } = useMatchPasswords();
+  const { submitAction } = useSubmitAction();
 
   return (
     <form
       action={async (formData) => {
         if (password !== confirmPassword) {
+          toast.error('Las contraseñas no coinciden');
           return;
         }
 
         setPassword('');
         setConfirmPassword('');
 
-        const { type, message, errors } = await registerAction(formData);
-
-        if (type === 'success') {
-          toast.success(message as string);
-
-          return redirect('/');
-        }
-
-        if (type === 'error') {
-          toast.error(`${message}${errors ? `: ${errors}` : ''}`);
-        }
+        await submitAction(registerAction, formData, '/');
       }}
     >
       <div className="grid gap-4">
@@ -114,13 +95,7 @@ export default function RegisterForm() {
           Continuando estoy de acuerdo con los{' '}
           <Link href="#">Términos y condiciones</Link>
         </p>
-        <Button className="w-full" type="submit" disabled={pending}>
-          {pending ? (
-            <span className="loading loading-spinner"></span>
-          ) : (
-            'Crear cuenta'
-          )}
-        </Button>
+        <SubmitButton />
       </div>
     </form>
   );

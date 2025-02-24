@@ -1,27 +1,18 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { loginAction } from '@/app/(public)/login/actions/login';
-import toast from 'react-hot-toast';
-import { redirect } from 'next/navigation';
+import useSubmitAction from '@/hooks/use-submit-action';
+import SubmitButton from '@/components/submit-button';
 
 export default function LoginForm() {
+  const { submitAction } = useSubmitAction();
+
   return (
     <form
-      action={async (formData) => {
-        const { type, message, errors } = await loginAction(formData);
-
-        if (type === 'success') {
-          toast.success(message as string);
-
-          return redirect('/');
-        }
-
-        if (type === 'error') {
-          toast.error(`${message}: ${errors ? errors : ''}`);
-        }
-      }}
+      action={async (formData) =>
+        await submitAction(loginAction, formData, '/')
+      }
     >
       <div className="grid gap-4">
         <div className="grid gap-2">
@@ -50,7 +41,7 @@ export default function LoginForm() {
             required
           />
         </div>
-        <Button className="w-full">Iniciar sesión</Button>
+        <SubmitButton />
       </div>
     </form>
   );
