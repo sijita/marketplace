@@ -10,8 +10,6 @@ export async function registerAction(formData: FormData) {
     const dataToParse = Object.fromEntries(formData);
     const parsedData = registerSchema.safeParse(dataToParse);
 
-    console.log('parsedData', parsedData);
-
     if (!parsedData.success) {
       return {
         type: 'error',
@@ -37,7 +35,6 @@ export async function registerAction(formData: FormData) {
       .insert([{ user_id: user?.id, name: parsedData.data.name }]);
 
     if (profileError) {
-      console.log(profileError);
       throw profileError.message;
     }
 
@@ -48,7 +45,6 @@ export async function registerAction(formData: FormData) {
       message: 'Registro exitoso, por favor verifique su correo',
     };
   } catch (error) {
-    console.log(error);
     return {
       type: 'error',
       message: 'Hubo un error al registrarse, intentelo de nuevo',

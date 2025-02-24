@@ -1,6 +1,5 @@
 'use client';
 import type React from 'react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,32 +14,57 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, X } from 'lucide-react';
+import { sellAction } from '@/app/(auth)/sell/actions/sell';
+import useSellFunctions from '@/app/(auth)/sell/hooks/use-sell-functions';
+import useSubmitAction from '@/hooks/use-submit-action';
 
-export default function SellForm() {
-  const [images, setImages] = useState<string[]>([]);
+export default function SellForm({
+  departments,
+  municipalities,
+  categories,
+}: {
+  departments: {
+    id: number;
+    name: string;
+  }[];
+  municipalities: {
+    id: number;
+    name: string;
+    department_id: number;
+  }[];
+  categories: {
+    id: number;
+    name: string;
+  }[];
+}) {
+  const {
+    images,
+    setImages,
+    handleImageUpload,
+    removeImage,
+    filteredMunicipalities,
+    selectedDepartment,
+    setSelectedDepartment,
+  } = useSellFunctions({ municipalities });
+  const { submitAction } = useSubmitAction();
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImages((prev) => [...prev, ...newImages]);
-    }
-  };
-
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
   return (
-    <form className="flex flex-col gap-10">
+    <form
+      action={async (formData) => {
+        setImages([]);
+        setSelectedDepartment('');
+
+        await submitAction(sellAction, formData, '/');
+      }}
+      className="flex flex-col gap-10"
+    >
       <div className="grid gap-6">
         <div className="w-full flex items-start gap-10">
           <div className="grid gap-3">
             <Label>Imagenes</Label>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col gap-4">
               {images.map((img, index) => (
-                <div key={index} className="relative">
+                <div key={index} className="relative shadow rounded-lg">
                   <img
                     src={img}
                     alt={`Product ${index + 1}`}
@@ -59,11 +83,13 @@ export default function SellForm() {
               ))}
               <label className="flex items-center justify-center h-[7.5rem] w-[7.5rem] border-2 border-dashed rounded cursor-pointer hover:border-primary">
                 <input
+                  name="images"
                   type="file"
-                  multiple
                   accept="image/*"
                   className="hidden"
                   onChange={handleImageUpload}
+                  multiple
+                  required
                 />
                 <Plus className="h-6 w-6" />
               </label>
@@ -72,19 +98,28 @@ export default function SellForm() {
           <div className="w-1/2 grid gap-5">
             <div className="grid gap-3">
               <Label htmlFor="productName">Nombre del producto</Label>
-              <Input id="productName" placeholder="Producto x" />
+              <Input
+                id="productName"
+                name="productName"
+                placeholder="Producto x"
+                required
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="category">Categoría</Label>
-              <Select>
+              <Select name="category" required>
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Seleccionar" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="electronics">Electronics</SelectItem>
-                  <SelectItem value="clothing">Clothing</SelectItem>
-                  <SelectItem value="home">Home & Garden</SelectItem>
-                  <SelectItem value="sports">Sports & Outdoors</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -93,19 +128,21 @@ export default function SellForm() {
             <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
+              name="description"
               placeholder="Describa el producto"
               rows={5}
+              required
             />
           </div>
           <div className="grid gap-3 justify-center">
             <Label>Condición</Label>
-            <RadioGroup defaultValue="new">
+            <RadioGroup name="condition" defaultValue="" required>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="new" id="new" />
+                <RadioGroupItem value="nuevo" id="new" />
                 <Label htmlFor="new">Nuevo</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="used" id="used" />
+                <RadioGroupItem value="usado" id="used" />
                 <Label htmlFor="used">Usado</Label>
               </div>
             </RadioGroup>
@@ -116,15 +153,24 @@ export default function SellForm() {
             <Label htmlFor="price">Precio</Label>
             <Input
               id="price"
+              name="price"
               type="number"
               placeholder="$0.00"
               min="0"
               step="0.01"
+              required
             />
           </div>
           <div className="w-full grid gap-3">
             <Label htmlFor="quantity">Cantidad</Label>
-            <Input id="quantity" type="number" placeholder="1" min="1" />
+            <Input
+              id="quantity"
+              name="quantity"
+              type="number"
+              placeholder="1"
+              min="1"
+              required
+            />
           </div>
         </div>
         <div className="grid gap-4">
@@ -132,44 +178,60 @@ export default function SellForm() {
           <div className="flex items-center gap-5">
             <div className="w-1/2 grid gap-2">
               <Label htmlFor="department">Departamento</Label>
-              <Select>
+              <Select
+                name="department"
+                onValueChange={(value) => setSelectedDepartment(value)}
+                value={selectedDepartment ?? undefined}
+                required
+              >
                 <SelectTrigger id="department">
                   <SelectValue placeholder="Seleccionar" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="antioquia">Antioquia</SelectItem>
-                  <SelectItem value="cundinamarca">Cundinamarca</SelectItem>
-                  <SelectItem value="valle">Valle del Cauca</SelectItem>
-                  <SelectItem value="atlantico">Atlántico</SelectItem>
-                  {/* Añadir más departamentos según sea necesario */}
+                  {departments.map((department) => (
+                    <SelectItem
+                      key={department.id}
+                      value={department.id.toString()}
+                    >
+                      {department.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="w-1/2 grid gap-2">
               <Label htmlFor="city">Ciudad</Label>
-              <Select>
+              <Select name="city" required>
                 <SelectTrigger id="city">
                   <SelectValue placeholder="Seleccionar" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="medellin">Medellín</SelectItem>
-                  <SelectItem value="bogota">Bogotá</SelectItem>
-                  <SelectItem value="cali">Cali</SelectItem>
-                  <SelectItem value="barranquilla">Barranquilla</SelectItem>
-                  {/* Añadir más ciudades según sea necesario */}
+                  {filteredMunicipalities.map((municipality) => (
+                    <SelectItem
+                      key={municipality.id}
+                      value={municipality.id.toString()}
+                    >
+                      {municipality.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="w-full grid gap-2">
-              <Label htmlFor="neighborhood">Dirección</Label>
-              <Input id="neighborhood" placeholder="Barrio, dirección, etc." />
+              <Label htmlFor="address">Dirección</Label>
+              <Input
+                id="address"
+                name="address"
+                placeholder="Barrio, dirección, etc."
+                required
+              />
             </div>
           </div>
         </div>
         <div className="grid gap-3">
           <Label>Opción de entrega</Label>
           <div className="flex items-center space-x-2">
-            <Checkbox id="freeShipping" />
+            <Checkbox name="freeShipping" id="freeShipping" />
             <Label htmlFor="freeShipping">Gratis</Label>
           </div>
         </div>

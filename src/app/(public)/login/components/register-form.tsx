@@ -49,7 +49,6 @@ export default function RegisterForm() {
         }
 
         if (type === 'error') {
-          console.log(errors);
           toast.error(`${message}${errors ? `: ${errors}` : ''}`);
         }
       }}
