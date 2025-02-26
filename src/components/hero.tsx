@@ -3,26 +3,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from './ui/button';
+import { Product } from '@/types/product';
 
-const slides = [
-  {
-    src: 'https://lacasadelplay.com.co/cdn/shop/files/WhatsAppImage2024-02-26at6.19.49PM.jpg?v=1716562140',
-    alt: 'Interior design',
-    title: 'Playstation 5',
-    category: 'VideoJuegos',
-  },
-  {
-    src: 'https://cronica.tech/wp-content/uploads/2023/01/playstationVR2.webp',
-    alt: 'Gafas VR',
-    title: 'Playstation VR2',
-    category: 'VideoJuegos',
-  },
-  // Agrega más objetos de diapositivas aquí
-];
-
-export default function Hero() {
+export default function Hero({ products }: { products: Product[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = slides.length;
+  const totalSlides = products.length;
 
   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
@@ -39,8 +24,8 @@ export default function Hero() {
   return (
     <div className="relative overflow-hidden rounded-xl max-lg:h-[500px]">
       <Image
-        src={slides[currentSlide].src}
-        alt={slides[currentSlide].alt}
+        src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide].images[0]}`}
+        alt={products[currentSlide].name}
         className="rounded-lg object-cover"
         priority
         fill
@@ -50,17 +35,17 @@ export default function Hero() {
         <div className="flex items-center gap-2">
           <div className="h-12 w-12 rounded-lg bg-zinc-100">
             <Image
-              src={slides[currentSlide].src}
-              alt="Chair icon"
+              src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide].images[0]}`}
+              alt={products[currentSlide].name}
               width={48}
               height={48}
-              className="p-2"
+              className="w-full h-full object-cover rounded-lg"
             />
           </div>
           <div>
-            <h3 className="font-semibold">{slides[currentSlide].title}</h3>
+            <h3 className="font-semibold">{products[currentSlide].name}</h3>
             <p className="text-sm text-muted-foreground">
-              {slides[currentSlide].category}
+              {products[currentSlide].categories.name}
             </p>
           </div>
         </div>
