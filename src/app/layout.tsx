@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/header';
 import Providers from './providers';
+import { createClient } from '@/utils/supabase/server';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,18 +20,24 @@ export const metadata: Metadata = {
   description: 'A marketplace for buying and selling all kinds of goods.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <Header />
+          <Header user={user} />
           {children}
         </Providers>
       </body>
