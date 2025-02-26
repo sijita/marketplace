@@ -33,6 +33,15 @@ export default function PopularProducts({ products }: { products: Product[] }) {
             image={
               product.images[Math.floor(Math.random() * product.images.length)]
             }
+            rating={
+              product?.reviews?.length > 0
+                ? product?.reviews?.reduce(
+                    (acc, review) => acc + review.rating,
+                    0
+                  ) / product?.reviews?.length
+                : 0
+            }
+            reviews={product?.reviews?.length}
           />
         ))}
       </div>

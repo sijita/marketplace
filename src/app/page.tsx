@@ -16,6 +16,9 @@ export default async function Home() {
     categories:category_id (
       name,
       description
+    ),
+    reviews (
+      *
     )
   `
     )
