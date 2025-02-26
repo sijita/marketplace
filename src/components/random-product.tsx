@@ -15,7 +15,7 @@ export default function RandomProduct() {
         height={400}
         className="h-full w-full object-cover"
       />
-      <div className="absolute bottom-0 flex items-center justify-between p-5 w-full">
+      <div className="absolute bottom-0 flex flex-wrap gap-2 items-center justify-between p-5 w-full">
         <div>
           <h3 className="text-lg font-semibold">Xbox series X</h3>
           <p className="text-sm text-muted-foreground">Videojuegos</p>

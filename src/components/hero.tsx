@@ -37,16 +37,16 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-xl">
+    <div className="relative overflow-hidden rounded-xl max-lg:h-[500px]">
       <Image
         src={slides[currentSlide].src}
         alt={slides[currentSlide].alt}
-        width={800}
-        height={500}
-        className="h-[500px] w-full object-cover"
+        className="rounded-lg object-cover"
+        priority
+        fill
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40 p-6" />
-      <div className="absolute inset-x-5 bottom-5 p-5 flex items-center justify-between gap-4 rounded-xl bg-white/80 backdrop-blur-sm">
+      <div className="absolute inset-x-5 bottom-5 p-5 flex flex-wrap items-center justify-between gap-5 rounded-xl bg-white/80 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <div className="h-12 w-12 rounded-lg bg-zinc-100">
             <Image
@@ -64,7 +64,7 @@ export default function Hero() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 max-sm:mx-auto">
           <Button
             size="icon"
             variant="ghost"
@@ -74,7 +74,7 @@ export default function Hero() {
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <span className="rounded-full bg-white/80 px-3 py-1 text-sm">
-            {currentSlide + 1}/{totalSlides}
+            {currentSlide + 1} / {totalSlides}
           </span>
           <Button
             size="icon"
