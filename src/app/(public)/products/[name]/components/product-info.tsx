@@ -10,12 +10,16 @@ import {
   Share2,
   ShoppingCart,
   Truck,
+  Loader2,
 } from 'lucide-react';
 import { Product } from '@/types/product';
 import { ProductDetails } from './product-detail';
 import { Badge } from '@/components/ui/badge';
+import { addToCart } from '../actions/add-to-cart';
+import toast from 'react-hot-toast';
 
 export function ProductInfo({ product }: { product: Product }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -113,8 +117,36 @@ export function ProductInfo({ product }: { product: Product }) {
             </Button>
           </div>
         </div>
-        <Button className="flex-1 flex items-center gap-3">
-          Añadir <ShoppingCart className="h-4 w-4" />{' '}
+        <Button
+          className="flex-1 flex items-center gap-3"
+          onClick={async () => {
+            setIsLoading(true);
+            try {
+              const { type, message } = await addToCart({
+                productId: product.id,
+                quantity,
+              });
+
+              setQuantity(1);
+
+              if (type === 'success') {
+                toast.success(message);
+              } else {
+                toast.error(message);
+              }
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              Añadir <ShoppingCart className="h-4 w-4" />
+            </>
+          )}
         </Button>
         <Button variant="outline" size="icon">
           <Heart className="h-4 w-4" />
