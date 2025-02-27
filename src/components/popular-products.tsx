@@ -25,24 +25,7 @@ export default function PopularProducts({ products }: { products: Product[] }) {
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {products?.map((product) => (
-          <ProductCard
-            key={product.id}
-            title={product.name}
-            category={product.categories.name}
-            price={product.price}
-            image={
-              product.images[Math.floor(Math.random() * product.images.length)]
-            }
-            rating={
-              product?.reviews?.length > 0
-                ? product?.reviews?.reduce(
-                    (acc, review) => acc + review.rating,
-                    0
-                  ) / product?.reviews?.length
-                : 0
-            }
-            reviews={product?.reviews?.length}
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
