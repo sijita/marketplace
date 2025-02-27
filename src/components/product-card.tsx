@@ -1,21 +1,16 @@
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Product } from '@/types/product';
+import { calculateAverageRating } from '@/utils';
 
-export default function ProductCard({
-  title,
-  category,
-  price,
-  image,
-}: {
-  title: string;
-  category: string;
-  price: number;
-  image: string;
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Link href="#" className="group relative rounded-xl bg-[#efefef]">
+    <Link
+      href={`/products/${product.name.replaceAll(' ', '-')}`}
+      className="group relative rounded-xl bg-white shadow overflow-hidden transition-shadow duration-300 hover:shadow-lg"
+    >
       <Button
         variant="ghost"
         size="icon"
@@ -23,31 +18,53 @@ export default function ProductCard({
       >
         <Heart className="h-5 w-5" />
       </Button>
-      <div className="aspect-square overflow-hidden rounded-t-xl">
+      <div className="aspect-square overflow-hidden rounded-lg p-5">
         <Image
-          src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${image}`}
-          alt={title}
+          src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${
+            product.images[Math.floor(Math.random() * product.images.length)]
+          }`}
+          alt={product.name}
           width={400}
           height={400}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105 rounded-t-xl"
+          className="h-full w-full object-cover transition-transform group-hover:scale-105 duration-300 rounded-lg"
         />
       </div>
       <div className="flex flex-col gap-3 p-4">
-        <div className="flex flex-col">
+        <div className="flex w-full justify-between items-center">
+          <div className="flex flex-col gap-5 max-w-[70%]">
+            <div className="flex items-center gap-1 mt-1">
+              <div className="flex items-center">
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                <span className="ml-1 text-sm">{product?.reviews?.length}</span>
+              </div>
+              <span className="text-sm text-muted-foreground">
+                (
+                {product?.reviews?.length > 0
+                  ? calculateAverageRating(product.reviews)
+                  : 0}{' '}
+                reviews)
+              </span>
+            </div>
+            <div>
+              <h3 className="w-full font-semibold truncate">{product.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {product.categories.name}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex items-center justify-between gap-3 flex-wrap">
           <span className="font-semibold">
             {new Intl.NumberFormat('es-CO', {
               style: 'currency',
               currency: 'COP',
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(price)}
+            }).format(product.price)}
           </span>
-          <div className="flex w-full justify-between items-center">
-            <div className="flex flex-col max-w-[70%]">
-              <h3 className="w-full font-semibold truncate">{title}</h3>
-              <p className="text-sm text-muted-foreground">{category}</p>
-            </div>
+          <div>
             <Button className="rounded-full bg-[#1d1d1d] text-white">
+              Añadir
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </div>
