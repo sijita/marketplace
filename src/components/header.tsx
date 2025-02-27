@@ -39,7 +39,7 @@ export default function Header({ user }: { user: User | null }) {
           <Link href="/" className="text-sm font-medium">
             Inicio
           </Link>
-          <Link href="#" className="text-sm font-medium">
+          <Link href="/products" className="text-sm font-medium">
             Comprar
           </Link>
           <Link href="/sell" className="text-sm font-medium">
