@@ -21,6 +21,47 @@ export interface Product {
   }[];
   category_id: number;
   location_id: number;
-  creator_id: number;
+  locations: {
+    id: number;
+    address: string;
+    municipality_id: number;
+    municipalities?: {
+      id: number;
+      name: string;
+      department_id: number;
+      departments?: {
+        id: number;
+        name: string;
+      };
+    };
+  };
+  seller_id: number;
+  profiles: {
+    id: number;
+    name: string;
+    location_id: number;
+    locations: {
+      id: number;
+      address: string;
+      municipality_id: number;
+      municipalities?: {
+        id: number;
+        name: string;
+        department_id: number;
+        departments?: {
+          id: number;
+          name: string;
+        };
+      };
+    };
+    user_id: string;
+    users: {
+      id: number;
+      email: string;
+      full_name: string;
+      avatar_url: string;
+      created_at: string;
+    };
+  };
   created_at: string;
 }
