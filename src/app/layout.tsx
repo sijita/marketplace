@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/header';
 import Providers from './providers';
 import { createClient } from '@/utils/supabase/server';
+import Footer from '@/components/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,6 +40,7 @@ export default async function RootLayout({
         <Providers>
           <Header user={user} />
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

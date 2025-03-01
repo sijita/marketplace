@@ -11,7 +11,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
+    <footer className="mt-12 flex flex-col items-center justify-between gap-4 border-t p-8 sm:flex-row">
       <p className="text-sm text-muted-foreground">© 2025 Marketplace</p>
       <div className="flex items-center gap-4">
         {socialLinks.map((link, i) => {

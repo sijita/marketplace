@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import {
   Heart,
-  MapPinned,
   Menu,
   Search,
   ShoppingCart,
@@ -27,14 +26,9 @@ export default function Header({ user }: { user: User | null }) {
   return (
     <nav className="border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center">
-          <Button className="rounded-lg" variant="ghost" size="icon">
-            <MapPinned className="h-5 w-5" />
-          </Button>
-          <Link href="/" className="text-xl font-bold ml-4">
-            Marketplace
-          </Link>
-        </div>
+        <Link href="/" className="text-xl font-bold ml-4">
+          Marketplace
+        </Link>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/" className="text-sm font-medium">
             Inicio

@@ -1,4 +1,3 @@
-import Footer from '@/components/footer';
 import Hero from '@/components/hero';
 import PopularCategories from '@/components/popular-categories';
 import PopularProducts from '@/components/popular-products';
@@ -19,8 +18,7 @@ export default async function Home() {
         <RandomProduct product={products?.[randomIndex]} />
       </div>
       <PopularProducts products={products} categories={categories} />
-      <PopularCategories  categories={categories} />
-      <Footer />
+      <PopularCategories categories={categories} />
     </main>
   );
 }
