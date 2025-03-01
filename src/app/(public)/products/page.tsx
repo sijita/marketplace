@@ -1,29 +1,15 @@
-import { createClient } from '@/utils/supabase/server';
 import { ProductGrid } from './components/products-grid';
+import { getProducts } from './api/products';
+import { getCategories } from './api/categories';
 
 export default async function Page() {
-  const supabase = await createClient();
-
-  // Fetch products from Supabase
-  const { data: products } = await supabase.from('products').select(
-    `
-    *,
-    categories:category_id (
-      name,
-      description
-    ),
-    reviews (
-      *
-    )
-  `
-  );
-
-  const { data: categories } = await supabase.from('categories').select('*');
+  const products = await getProducts();
+  const categories = await getCategories();
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col gap-5">
       <h1 className="text-3xl font-bold">Productos</h1>
-      <ProductGrid products={products ?? []} categories={categories ?? []} />
+      <ProductGrid products={products} categories={categories} />
     </div>
   );
 }

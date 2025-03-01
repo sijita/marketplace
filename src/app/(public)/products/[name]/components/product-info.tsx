@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,15 +11,14 @@ import {
   Truck,
   Loader2,
 } from 'lucide-react';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
 import { ProductDetails } from './product-detail';
 import { Badge } from '@/components/ui/badge';
-import { addToCart } from '../actions/add-to-cart';
-import toast from 'react-hot-toast';
+import { calculateAverageRating, formatPrice } from '@/utils';
+import useAddToCart from '@/hooks/use-add-to-cart';
 
 export function ProductInfo({ product }: { product: Product }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const { isLoading, quantity, setQuantity, handleAddToCart } = useAddToCart();
 
   return (
     <div className="flex flex-col gap-10">
@@ -59,12 +57,9 @@ export function ProductInfo({ product }: { product: Product }) {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {(
-                product.reviews.reduce(
-                  (acc, review) => acc + review.rating,
-                  0
-                ) / product.reviews.length
-              ).toFixed(1)}{' '}
+              {product?.reviews?.length > 0
+                ? calculateAverageRating(product.reviews)
+                : 0}{' '}
               ({product.reviews.length} reviews)
             </span>
           </div>
@@ -72,14 +67,7 @@ export function ProductInfo({ product }: { product: Product }) {
         <p className="text-lg text-muted-foreground">{product.description}</p>
       </div>
       <div className="flex items-center justify-between">
-        <p className="text-2xl font-bold">
-          {new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(product.price)}
-        </p>
+        <p className="text-2xl font-bold">{formatPrice(product.price)}</p>
         <Badge
           className="flex items-center gap-2 font-semibold py-2"
           variant="secondary"
@@ -112,6 +100,7 @@ export function ProductInfo({ product }: { product: Product }) {
               variant="outline"
               size="icon"
               onClick={() => setQuantity(quantity + 1)}
+              disabled={quantity === product.stock}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -119,24 +108,8 @@ export function ProductInfo({ product }: { product: Product }) {
         </div>
         <Button
           className="flex-1 flex items-center gap-3"
-          onClick={async () => {
-            setIsLoading(true);
-            try {
-              const { type, message } = await addToCart({
-                productId: product.id,
-                quantity,
-              });
-
-              setQuantity(1);
-
-              if (type === 'success') {
-                toast.success(message);
-              } else {
-                toast.error(message);
-              }
-            } finally {
-              setIsLoading(false);
-            }
+          onClick={async (e) => {
+            handleAddToCart(e, product.id);
           }}
           disabled={isLoading}
         >

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import type { Cart } from '@/types/cart';
+import { formatPrice } from '@/utils';
 
 export default function OrderSummary({ cartItems }: { cartItems: Cart[] }) {
   const subtotal = cartItems.reduce(
@@ -20,26 +21,12 @@ export default function OrderSummary({ cartItems }: { cartItems: Cart[] }) {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>
-                {new Intl.NumberFormat('es-CO', {
-                  style: 'currency',
-                  currency: 'COP',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }).format(subtotal)}
-              </span>
+              <span>{formatPrice(subtotal)}</span>
             </div>
             <Separator className="my-2" />
             <div className="flex justify-between font-semibold">
               <span>Total</span>
-              <span>
-                {new Intl.NumberFormat('es-CO', {
-                  style: 'currency',
-                  currency: 'COP',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }).format(total)}
-              </span>
+              <span>{formatPrice(total)}</span>
             </div>
           </div>
         </CardContent>

@@ -30,9 +30,12 @@ export async function sellAction(formData: FormData): Promise<{
     const parsedData = sellSchema.safeParse({
       ...dataToParse,
       price: +dataToParse.price,
-      quantity: +dataToParse.quantity,
+      stock: +dataToParse.stock,
       freeShipping: dataToParse.freeShipping === 'true',
     });
+
+    console.log(parsedData);
+    console.log(parsedData?.error?.flatten().fieldErrors);
 
     if (!parsedData.success) {
       return {
@@ -92,11 +95,11 @@ export async function sellAction(formData: FormData): Promise<{
       images: imageUrls,
       category_id: parsedData.data.category,
       price: parsedData.data.price,
-      quantity: parsedData.data.quantity,
+      stock: parsedData.data.stock,
       condition: parsedData.data.condition,
       free_shipping: parsedData.data.freeShipping,
       location_id: location.id,
-      creator_id: user.id,
+      seller_id: user.id,
     });
 
     if (error) {
@@ -114,6 +117,7 @@ export async function sellAction(formData: FormData): Promise<{
       message: 'Producto publicado con exito',
     };
   } catch (error) {
+    console.log(error);
     return {
       type: 'error',
       message: 'Hubo un error al publicar el producto',

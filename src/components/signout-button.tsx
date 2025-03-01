@@ -1,5 +1,5 @@
 'use client';
-import { signoutAction } from '@/app/actions/signout';
+import { signoutAction } from '@/actions/signout';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 import toast from 'react-hot-toast';
 

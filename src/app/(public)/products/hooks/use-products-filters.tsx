@@ -1,19 +1,20 @@
+import useCategoriesStore from '@/store/categories';
 import { useState, useEffect } from 'react';
 
 export default function useProductsFilters({
   onPriceRangeChange,
-  onCategoriesChange,
 }: {
   onPriceRangeChange: (range: number[]) => void;
-  onCategoriesChange: (categories: string[]) => void;
 }) {
+  const selectedCategories = useCategoriesStore((state) => state.categories);
+  const setSelectedCategories = useCategoriesStore(
+    (state) => state.setCategories
+  );
   const [priceRange, setPriceRange] = useState([0, 1000000]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   useEffect(() => {
     onPriceRangeChange([0, 1000000]);
-    onCategoriesChange([]);
-  }, [onPriceRangeChange, onCategoriesChange]);
+  }, [onPriceRangeChange]);
 
   const handlePriceRangeChange = (newRange: number[]) => {
     setPriceRange(newRange);
@@ -26,7 +27,6 @@ export default function useProductsFilters({
       : [...selectedCategories, category];
 
     setSelectedCategories(newCategories);
-    onCategoriesChange(newCategories);
   };
 
   return {

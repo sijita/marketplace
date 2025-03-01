@@ -1,11 +1,10 @@
 import { CartItems } from './components/carts-items';
-import { getCartItems } from './actions/handle-cart';
 import EmptyCart from './components/empty-cart';
-import type { Cart } from '@/types/cart';
 import OrderSummary from './components/order-summary';
+import { getCartItems } from './api/cart';
 
 export default async function ShoppingCartPage() {
-  const cartItems = (await getCartItems()) as unknown as Cart[];
+  const cartItems = await getCartItems();
 
   if (!cartItems.length) return <EmptyCart />;
 

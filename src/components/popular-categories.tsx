@@ -1,12 +1,18 @@
-import { Categories } from '@/types/categories';
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Category } from '@/types/category';
+import useCategoriesStore from '@/store/categories';
 
 export default function PopularCategories({
   categories,
 }: {
-  categories: Categories[];
+  categories: Category[];
 }) {
+  const setSelectedCategories = useCategoriesStore(
+    (state) => state.setCategories
+  );
+
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-2xl font-bold">Categorias populares</h2>
@@ -17,10 +23,11 @@ export default function PopularCategories({
             .map((category, index) => (
               <Link
                 key={index}
-                href="#"
+                href="/products"
                 className={`${
                   index === 0 || index === 5 ? 'col-span-2' : 'col-span-1'
                 } max-sm:col-span-1 row-span-1 rounded-lg flex items-center justify-center relative h-56 hover:opacity-80 p-5 overflow-hidden`}
+                onClick={() => setSelectedCategories([category.name])}
               >
                 <Image
                   src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${category.products[0].images[0]}`}

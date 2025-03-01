@@ -4,7 +4,7 @@ export interface Product {
   price: number;
   description: string;
   images: string[];
-  quantity: number;
+  stock: number;
   free_shipping: boolean;
   condition: string;
   categories: {

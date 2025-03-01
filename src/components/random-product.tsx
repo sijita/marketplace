@@ -1,17 +1,26 @@
+'use client';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
+import { formatPrice } from '@/utils';
+import useAddToCart from '@/hooks/use-add-to-cart';
 
 export default function RandomProduct({ product }: { product: Product }) {
+  const { isLoading, handleAddToCart } = useAddToCart();
+
   return (
     <Link
       href="#"
       className="relative overflow-hidden rounded-xl hover:opacity-80"
     >
       <Image
-        src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${product.images[0]}`}
-        alt={product.name}
+        src={
+          product?.images
+            ? `https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${product?.images[0]}`
+            : 'https://placehold.co/600x400'
+        }
+        alt={product?.name ?? 'Product image'}
         width={400}
         height={400}
         className="h-full w-full object-cover"
@@ -21,23 +30,24 @@ export default function RandomProduct({ product }: { product: Product }) {
         <div className="flex flex-col gap-5">
           <div>
             <h3 className="text-lg font-semibold text-white drop-shadow-sm">
-              {product.name}
+              {product?.name}
             </h3>
             <p className="text-sm text-gray-200 drop-shadow-sm">
-              {product.categories.name}
+              {product?.categories.name}
             </p>
           </div>
           <div className="w-full flex items-center justify-between gap-3 flex-wrap">
             <span className="font-semibold">
-              {new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }).format(product.price)}
+              {formatPrice(product?.price ?? 0)}
             </span>
-            <Button className="rounded-full bg-[#1d1d1d] text-white">
-              Añadir al carrito
+            <Button
+              className="rounded-full bg-[#1d1d1d] text-white"
+              onClick={async (e) => {
+                handleAddToCart(e, product?.id);
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? <span>Loading...</span> : <>Añadir al carrito</>}
             </Button>
           </div>
         </div>

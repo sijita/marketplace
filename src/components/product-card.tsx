@@ -1,11 +1,15 @@
-import { Heart, ShoppingCart, Star } from 'lucide-react';
+'use client';
+import { Heart, Loader2, ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Product } from '@/types/product';
-import { calculateAverageRating } from '@/utils';
+import type { Product } from '@/types/product';
+import { calculateAverageRating, formatPrice } from '@/utils';
+import useAddToCart from '@/hooks/use-add-to-cart';
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { isLoading, handleAddToCart } = useAddToCart();
+
   return (
     <Link
       href={`/products/${product.name.replaceAll(' ', '-')}`}
@@ -31,8 +35,8 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="flex flex-col gap-3 p-4">
         <div className="flex w-full justify-between items-center">
-          <div className="flex flex-col gap-5 max-w-[70%]">
-            <div className="flex items-center gap-1 mt-1">
+          <div className="flex flex-col gap-5 max-w-[70%] max-md:max-w-full">
+            <div className="flex items-center gap-1">
               <div className="flex items-center">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <span className="ml-1 text-sm">{product?.reviews?.length}</span>
@@ -54,18 +58,23 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
         <div className="w-full flex items-center justify-between gap-3 flex-wrap">
-          <span className="font-semibold">
-            {new Intl.NumberFormat('es-CO', {
-              style: 'currency',
-              currency: 'COP',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(product.price)}
-          </span>
+          <span className="font-semibold">{formatPrice(product.price)}</span>
           <div>
-            <Button className="rounded-full bg-[#1d1d1d] text-white">
-              Añadir
-              <ShoppingCart className="h-5 w-5" />
+            <Button
+              className="rounded-full bg-[#1d1d1d] text-white"
+              onClick={async (e) => {
+                handleAddToCart(e, product.id);
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  Añadir
+                  <ShoppingCart className="h-5 w-5" />
+                </>
+              )}
             </Button>
           </div>
         </div>

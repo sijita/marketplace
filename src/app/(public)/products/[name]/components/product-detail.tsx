@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
 import {
   Accordion,
   AccordionContent,

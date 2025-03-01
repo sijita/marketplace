@@ -1,31 +1,27 @@
 'use client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { Button } from './ui/button';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
+import useHandleCarousel from '@/hooks/use-handle-carousel';
+import Link from 'next/link';
 
 export default function Hero({ products }: { products: Product[] }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = products.length;
-
-  const handlePrevSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? totalSlides - 1 : prevSlide - 1
-    );
-  };
-
-  const handleNextSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === totalSlides - 1 ? 0 : prevSlide + 1
-    );
-  };
+  const { currentSlide, totalSlides, handlePrevSlide, handleNextSlide } =
+    useHandleCarousel({ products });
 
   return (
-    <div className="relative overflow-hidden rounded-xl max-lg:h-[500px]">
+    <Link
+      href={`/products/${products[currentSlide]?.name?.replaceAll(' ', '-')}`}
+      className="relative overflow-hidden rounded-xl max-lg:h-[500px]"
+    >
       <Image
-        src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide].images[0]}`}
-        alt={products[currentSlide].name}
+        src={
+          products[currentSlide]?.images[0]?.length
+            ? `https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide]?.images[0]}`
+            : 'https://placehold.co/600x400'
+        }
+        alt={products[currentSlide]?.name ?? 'Product image'}
         className="rounded-lg object-cover"
         priority
         fill
@@ -35,17 +31,21 @@ export default function Hero({ products }: { products: Product[] }) {
         <div className="flex items-center gap-2">
           <div className="h-12 w-12 rounded-lg bg-zinc-100">
             <Image
-              src={`https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide].images[0]}`}
-              alt={products[currentSlide].name}
+              src={
+                products[currentSlide]?.images[0]?.length
+                  ? `https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${products[currentSlide]?.images[0]}`
+                  : 'https://placehold.co/600x400'
+              }
+              alt={products[currentSlide]?.name ?? 'Product image'}
               width={48}
               height={48}
               className="w-full h-full object-cover rounded-lg"
             />
           </div>
           <div>
-            <h3 className="font-semibold">{products[currentSlide].name}</h3>
+            <h3 className="font-semibold">{products[currentSlide]?.name}</h3>
             <p className="text-sm text-muted-foreground">
-              {products[currentSlide].categories.name}
+              {products[currentSlide]?.categories.name}
             </p>
           </div>
         </div>
@@ -71,6 +71,6 @@ export default function Hero({ products }: { products: Product[] }) {
           </Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -6,7 +6,7 @@ const sellSchema = z.object({
   description: z.string().min(1),
   condition: z.enum(['nuevo', 'usado']),
   price: z.number().positive().min(1000),
-  quantity: z.number().int().positive(),
+  stock: z.number().int().positive(),
   department: z.string().min(1),
   city: z.string().min(1),
   address: z.string().min(1),

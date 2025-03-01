@@ -53,10 +53,11 @@ export default function Header({ user }: { user: User | null }) {
           <Button className="rounded-lg" variant="ghost" size="icon">
             <Heart className="h-5 w-5" />
           </Button>
-          <Button className="rounded-lg" variant="ghost" size="icon">
-            <ShoppingCart className="h-5 w-5" />
+          <Button asChild className="rounded-lg" variant="ghost" size="icon">
+            <Link href="/cart">
+              <ShoppingCart className="h-5 w-5" />
+            </Link>
           </Button>
-
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

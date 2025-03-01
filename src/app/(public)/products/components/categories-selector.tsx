@@ -5,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { Label } from '@/components/ui/label';
-import { Categories } from '@/types/categories';
+import type { Category } from '@/types/category';
 import { ChevronDown } from 'lucide-react';
 
 export default function CategoriesSelector({
@@ -13,7 +13,7 @@ export default function CategoriesSelector({
   selectedCategories,
   handleCategoryChange,
 }: {
-  categories: Categories[];
+  categories: Category[];
   selectedCategories: string[];
   handleCategoryChange: (category: string) => void;
 }) {

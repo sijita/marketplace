@@ -1,9 +1,9 @@
 'use client';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
 import { ProductsFilters } from './products-filters';
 import { ProductSort } from './products-sort';
 import ProductCard from '@/components/product-card';
-import { Categories } from '@/types/categories';
+import type { Category } from '@/types/category';
 import useProductsSort from '../hooks/use-products-sort';
 
 export function ProductGrid({
@@ -11,27 +11,21 @@ export function ProductGrid({
   categories,
 }: {
   products: Product[];
-  categories: Categories[];
+  categories: Category[];
 }) {
-  const {
-    sortBy,
-    filteredProducts,
-    setPriceRange,
-    setSelectedCategories,
-    setSortBy,
-  } = useProductsSort({ products });
+  const { sortBy, filteredProducts, setPriceRange, setSortBy } =
+    useProductsSort({ products });
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       <ProductsFilters
         onPriceRangeChange={setPriceRange}
-        onCategoriesChange={setSelectedCategories}
         categories={categories}
       />
       <main className="w-full lg:w-3/4">
         <div className="flex justify-between items-center mb-6">
           <p className="text-base text-muted-foreground">
-            {filteredProducts.length} products found
+            {filteredProducts.length} productos encontrados
           </p>
           <ProductSort onSort={setSortBy} sortBy={sortBy} />
         </div>

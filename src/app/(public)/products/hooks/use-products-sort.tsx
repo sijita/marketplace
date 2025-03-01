@@ -1,10 +1,11 @@
-import { Product } from '@/types/product';
+import useCategoriesStore from '@/store/categories';
+import type { Product } from '@/types/product';
 import { calculateAverageRating } from '@/utils';
 import { useState } from 'react';
 
 export default function useProductsSort({ products }: { products: Product[] }) {
+  const selectedCategories = useCategoriesStore((state) => state.categories);
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('featured');
 
   const filteredProducts = products
@@ -32,7 +33,6 @@ export default function useProductsSort({ products }: { products: Product[] }) {
     sortBy,
     filteredProducts,
     setPriceRange,
-    setSelectedCategories,
     setSortBy,
   };
 }

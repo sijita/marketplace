@@ -168,10 +168,10 @@ export default function SellForm({
           />
         </div>
         <div className="w-full grid gap-3">
-          <Label htmlFor="quantity">Cantidad</Label>
+          <Label htmlFor="stock">Stock</Label>
           <Input
-            id="quantity"
-            name="quantity"
+            id="stock"
+            name="stock"
             type="number"
             placeholder="1"
             min="1"

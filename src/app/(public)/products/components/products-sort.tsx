@@ -20,10 +20,10 @@ export function ProductSort({
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="featured">Featured</SelectItem>
-        <SelectItem value="priceLowToHigh">Price: Low to High</SelectItem>
-        <SelectItem value="priceHighToLow">Price: High to Low</SelectItem>
-        <SelectItem value="rating">Top Rated</SelectItem>
+        <SelectItem value="featured">Destacados</SelectItem>
+        <SelectItem value="priceLowToHigh">Precio: Bajo a Alto</SelectItem>
+        <SelectItem value="priceHighToLow">Precio: Alto a Bajo</SelectItem>
+        <SelectItem value="rating">Mejores calificaciones</SelectItem>
       </SelectContent>
     </Select>
   );

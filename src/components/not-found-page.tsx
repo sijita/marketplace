@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ShoppingBag } from 'lucide-react';
-import { Product } from '@/types/product';
+import type { Product } from '@/types/product';
 import ProductCard from './product-card';
 
 export default function NotFoundPage({

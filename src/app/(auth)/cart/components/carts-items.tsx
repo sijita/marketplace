@@ -11,6 +11,7 @@ import {
 } from '@/app/(auth)/cart/actions/handle-cart';
 import type { Product } from '@/types/product';
 import toast from 'react-hot-toast';
+import { formatPrice } from '@/utils';
 
 export function CartItems({
   initialItems,
@@ -38,7 +39,7 @@ export function CartItems({
               <div className="flex-1">
                 <h3 className="font-semibold">{item.products.name}</h3>
                 <p className="text-muted-foreground">
-                  ${item.products.price.toFixed(2)}
+                  {formatPrice(item.products.price)}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
@@ -90,7 +91,7 @@ export function CartItems({
                       }
                     )
                   }
-                  disabled={item.quantity === item.products.quantity}
+                  disabled={item.quantity === item.products.stock}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -98,7 +99,13 @@ export function CartItems({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={async () => await removeCartItem(item.id)}
+                onClick={async () => {
+                  toast.promise(removeCartItem(item.id), {
+                    loading: 'Eliminando...',
+                    success: 'Se eliminó el producto correctamente',
+                    error: 'Error al eliminar el producto',
+                  });
+                }}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

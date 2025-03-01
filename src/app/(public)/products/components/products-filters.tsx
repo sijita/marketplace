@@ -1,18 +1,16 @@
 'use client';
 import useProductsFilters from '../hooks/use-products-filters';
-import { Categories } from '@/types/categories';
+import type { Category } from '@/types/category';
 import CategoriesSelector from './categories-selector';
 import PriceRangeSlider from './price-range-slider';
 import { Separator } from '@/components/ui/separator';
 
 export function ProductsFilters({
   onPriceRangeChange,
-  onCategoriesChange,
   categories,
 }: {
   onPriceRangeChange: (range: number[]) => void;
-  onCategoriesChange: (categories: string[]) => void;
-  categories: Categories[];
+  categories: Category[];
 }) {
   const {
     priceRange,
@@ -21,7 +19,6 @@ export function ProductsFilters({
     handleCategoryChange,
   } = useProductsFilters({
     onPriceRangeChange,
-    onCategoriesChange,
   });
 
   return (
