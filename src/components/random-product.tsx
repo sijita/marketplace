@@ -1,29 +1,56 @@
+'use client';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import type { Product } from '@/types/product';
+import { formatPrice } from '@/utils';
+import useAddToCart from '@/hooks/use-add-to-cart';
 
-export default function RandomProduct() {
+export default function RandomProduct({ product }: { product: Product }) {
+  const { isLoading, handleAddToCart } = useAddToCart();
+
   return (
     <Link
       href="#"
       className="relative overflow-hidden rounded-xl hover:opacity-80"
     >
       <Image
-        src="https://imagenes.elpais.com/resizer/v2/https%3A%2F%2Frt01.epimg.net%2Fretina%2Fimagenes%2F2020%2F11%2F09%2Finnovacion%2F1604942002_903423_1605034981_noticia_fotograma.jpg?auth=417dc8cd0f1d67a822b429ecbe6a736a82047b782d252fd50a4899f8117b524a&width=1960&height=1470&smart=true"
-        alt="Cast Lights"
+        src={
+          product?.images
+            ? `https://vjxnxxhyjyzouvajgxuy.supabase.co/storage/v1/object/public/products_images/${product?.images[0]}`
+            : 'https://placehold.co/600x400'
+        }
+        alt={product?.name ?? 'Product image'}
         width={400}
         height={400}
         className="h-full w-full object-cover"
       />
-      <div className="absolute bottom-0 flex items-center justify-between p-5 w-full">
-        <div>
-          <h3 className="text-lg font-semibold">Xbox series X</h3>
-          <p className="text-sm text-muted-foreground">Videojuegos</p>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/20 p-1" />
+      <div className="absolute bottom-0 flex flex-wrap gap-2 items-center justify-between p-5 w-full">
+        <div className="flex flex-col gap-5">
+          <div>
+            <h3 className="text-lg font-semibold text-white drop-shadow-sm">
+              {product?.name}
+            </h3>
+            <p className="text-sm text-gray-200 drop-shadow-sm">
+              {product?.categories.name}
+            </p>
+          </div>
+          <div className="w-full flex items-center justify-between gap-3 flex-wrap">
+            <span className="font-semibold">
+              {formatPrice(product?.price ?? 0)}
+            </span>
+            <Button
+              className="rounded-full bg-[#1d1d1d] text-white"
+              onClick={async (e) => {
+                handleAddToCart(e, product?.id);
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? <span>Loading...</span> : <>Añadir al carrito</>}
+            </Button>
+          </div>
         </div>
-        <Button className="rounded-full bg-[#1d1d1d] text-white">
-          Add to cart
-          <span>$45.90</span>
-        </Button>
       </div>
     </Link>
   );

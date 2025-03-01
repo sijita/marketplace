@@ -1,12 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export const createClient = async (request: NextRequest) => {
-  // Create an unmodified response
+export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request,
   });
 
   const supabase = createServerClient(
@@ -32,7 +29,13 @@ export const createClient = async (request: NextRequest) => {
     }
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user && request.nextUrl.pathname === '/login') {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 
   return supabaseResponse;
-};
+}
